@@ -9,7 +9,14 @@ var neuralNet = require('./neuralNet');
 
 app.get('/', function(req, res) {
 	if (req.query.id) {
-		res.sendFile(__dirname + '/nets/' + req.query.id);
+		if (neuralNet.isInprogress(req.query.id)) {
+			res.send(JSON.stringify({
+				ok: true,
+				done: false
+			}));
+		} else {
+			res.sendFile(__dirname + '/nets/' + req.query.id);
+		}
 	} else {
 		res.send(JSON.stringify({
 			ok: false,

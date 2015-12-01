@@ -3,8 +3,11 @@ var extend = require('extend');
 var uuid = require('node-uuid');
 var fs = require('fs');
 
+var inprogress = [];
+
 module.exports = {
-	runNet: runNet
+	runNet: runNet,
+	isInprogress: isInprogress
 };
 
 var defaultNetConfig = {
@@ -17,6 +20,7 @@ function runNet(netConfig, data) {
 	var id = uuid.v4();
 	var config = extend(true, {}, defaultNetConfig, netConfig);
 	var net = createNetwork(config, data[0].length - 1);
+	inprogress.push(id);
 	setTimeout(function() {
 		asyncRun(net, config, data, id);
 	}, 0);
@@ -45,6 +49,10 @@ function createNetwork(config, dataSize) {
 	});
 }
 
+function isInprogress(id) {
+	return inprogress.indexOf(id) != -1;
+}
+
 function asyncRun(net, config, data, id) {
 	for (var i = 0; i < config.iterations; i++) {
 		for (var row = 0; row < data.length; row++) {
@@ -56,5 +64,7 @@ function asyncRun(net, config, data, id) {
 		return row.concat(net.activate(row.slice(1))).join(',');
 	});
 	fs.writeFileSync('nets/' + id, results.join('\n'));
+	var index = inprogress.indexOf(id);
+	inprogress.splice(1, index);
 	console.log('Done writing ' + id);
 }
