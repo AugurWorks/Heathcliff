@@ -3,13 +3,13 @@ var request = require('request');
 request.post('http://localhost:3000', {
 	json: {
 		config: {
-			depth: 6
+			depth: 1
 		},
 		data: [
-			[1, 2, 3, 4],
-			[2, 3, 4, 1],
-			[3, 4, 1, 2],
-			[4, 1, 2, 3]
+			[0, 0, 0],
+			[1, 1, 0],
+			[1, 0, 1],
+			[0, 1, 1]
 		]
 	}
 }, function(e, r, data) {

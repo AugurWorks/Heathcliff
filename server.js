@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.json());
 
-var neuralNet = require('./neuralNet')
+var neuralNet = require('./neuralNet');
 
 app.get('/', function(req, res) {
 	res.send('Hello world!');
