@@ -4,8 +4,8 @@ var app = express();
 var neuralNet = require('./neuralNet')
 
 app.get('/', function(req, res) {
-	neuralNet.runNet({});
-	res.send('Hello World!');
+	var result = neuralNet.runNet({});
+	res.send(JSON.stringify(result));
 });
 
 var server = app.listen(3000, function() {

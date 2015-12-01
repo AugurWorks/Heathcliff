@@ -1,5 +1,6 @@
 var synaptic = require('synaptic');
 var extend = require('extend');
+var uuid = require('node-uuid');
 
 module.exports = {
 	runNet: runNet
@@ -12,10 +13,13 @@ var defaultNetConfig = {
 };
 
 function runNet(netConfig) {
+	var id = uuid.v4();
 	var config = extend(true, {}, defaultNetConfig, netConfig);
 	var net = createNetwork(config, 5);
-	console.log(config);
-	console.log(net);
+	return {
+		ok: true,
+		id: id
+	};
 }
 
 function createNetwork(config, dataSize) {
