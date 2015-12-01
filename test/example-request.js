@@ -14,4 +14,9 @@ request.post('http://localhost:3000', {
 	}
 }, function(e, r, data) {
 	console.log(data);
+	setTimeout(function() {
+		request.get('http://localhost:3000/?id=' + data.id, function(e, r, res) {
+			console.log(res);
+		});
+	}, 1000);
 });

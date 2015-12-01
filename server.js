@@ -1,12 +1,21 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var fs = require('fs');
+
 var app = express();
 app.use(bodyParser.json());
 
 var neuralNet = require('./neuralNet');
 
 app.get('/', function(req, res) {
-	res.send('Hello world!');
+	if (req.query.id) {
+		res.sendFile(__dirname + '/nets/' + req.query.id);
+	} else {
+		res.send(JSON.stringify({
+			ok: false,
+			error: 'Please pass a request ID'
+		}));
+	}
 });
 
 app.post('/', function(req, res) {
