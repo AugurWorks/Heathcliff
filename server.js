@@ -8,21 +8,23 @@ app.use(bodyParser.json());
 var neuralNet = require('./neuralNet');
 
 app.get('/', function(req, res) {
+	var result = {};
 	if (req.query.id) {
+		result.ok = true;
 		if (neuralNet.isInprogress(req.query.id)) {
-			res.send(JSON.stringify({
-				ok: true,
-				done: false
-			}));
+			result.done = false;
 		} else {
-			res.sendFile(__dirname + '/nets/' + req.query.id);
+			var data = fs.readFileSync('nets/' + req.query.id, 'utf8');
+			result.done = true;
+			result.data = data.split('\n').map(function(row) {
+				return row.split(',');
+			});
 		}
 	} else {
-		res.send(JSON.stringify({
-			ok: false,
-			error: 'Please pass a request ID'
-		}));
+		result.ok = false;
+		result.error = 'Please pass a request ID';
 	}
+	res.send(result);
 });
 
 app.post('/', function(req, res) {
