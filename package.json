@@ -5,6 +5,8 @@
   "author": "TheConnMan",
   "license": "Proprietary",
   "dependencies": {
-    "express": "^4.13.3"
+    "express": "^4.13.3",
+    "extend": "^3.0.0",
+    "synaptic": "^1.0.2"
   }
 }

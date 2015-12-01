@@ -1,7 +1,10 @@
 var express = require('express');
 var app = express();
 
+var neuralNet = require('./neuralNet')
+
 app.get('/', function(req, res) {
+	neuralNet.runNet({});
 	res.send('Hello World!');
 });
 
