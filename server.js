@@ -10,7 +10,7 @@ app.get('/', function(req, res) {
 });
 
 app.post('/', function(req, res) {
-	var result = neuralNet.runNet({});
+	var result = neuralNet.runNet(req.body.config, req.body.data);
 	res.send(JSON.stringify(result));
 });
 

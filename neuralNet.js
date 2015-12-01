@@ -12,10 +12,10 @@ var defaultNetConfig = {
 	learningRate: 0.3
 };
 
-function runNet(netConfig) {
+function runNet(netConfig, data) {
 	var id = uuid.v4();
 	var config = extend(true, {}, defaultNetConfig, netConfig);
-	var net = createNetwork(config, 5);
+	var net = createNetwork(config, data[0].length - 1);
 	return {
 		ok: true,
 		id: id
