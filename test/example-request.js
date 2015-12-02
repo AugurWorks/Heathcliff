@@ -16,7 +16,12 @@ request.post('http://localhost:3000', {
 	console.log(data);
 	setTimeout(function() {
 		request.get('http://localhost:3000/?id=' + data.id, function(e, r, res) {
-			console.log(res);
+			var json = JSON.parse(res);
+			if (json.done) {
+				console.log(json.data.map(function(row) {
+					return row.join(',');
+				}).join('\n'));
+			}
 		});
 	}, 1000);
 });
