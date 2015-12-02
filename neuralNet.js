@@ -13,7 +13,9 @@ module.exports = {
 var defaultNetConfig = {
 	depth: 4,
 	iterations: 20000,
-	learningRate: 0.3
+	learningRate: 0.3,
+	maxBound: 0.9,
+	minBound: 0.1
 };
 
 function runNet(netConfig, data) {
@@ -54,17 +56,48 @@ function isInprogress(id) {
 }
 
 function asyncRun(net, config, data, id) {
+	var bounds = calculateBounds(data);
+	var normalized = normalize(data, bounds, config);
 	for (var i = 0; i < config.iterations; i++) {
-		for (var row = 0; row < data.length; row++) {
-			net.activate(data[row].slice(1));
-			net.propagate(config.learningRate, [data[row][0]]);
+		for (var row = 0; row < normalized.length; row++) {
+			net.activate(normalized[row].slice(1));
+			net.propagate(config.learningRate, [normalized[row][0]]);
 		}
 	}
-	var results = data.map(function(row) {
-		return row.concat(net.activate(row.slice(1))).join(',');
+	var results = normalized.map(function(row) {
+		return row.concat(net.activate(row.slice(1)));
 	});
-	fs.writeFileSync('nets/' + id, results.join('\n'));
+	var denormalized = denormalize(results, bounds, config);
+	fs.writeFileSync('nets/' + id, denormalized.map(function(row) {
+		return row.join(',');
+	}).join('\n'));
 	var index = inprogress.indexOf(id);
 	inprogress.splice(index, 1);
 	console.log('Done writing ' + id);
+}
+
+function calculateBounds(data) {
+	var max = Math.max.apply(null, data.map(function(row) {
+		return Math.max.apply(null, row);
+	}));
+	var min = Math.min.apply(null, data.map(function(row) {
+		return Math.min.apply(null, row);
+	}));
+	return [min, max];
+}
+
+function normalize(data, bounds, config) {
+	return data.map(function(row) {
+		return row.map(function(val) {
+			return (val - bounds[0]) / (bounds[1] - bounds[0]) * (config.maxBound - config.minBound) + config.minBound;
+		});
+	});
+}
+
+function denormalize(normalized, bounds, config) {
+	return normalized.map(function(row) {
+		return row.map(function(val) {
+			return (val - config.minBound) / (config.maxBound - config.minBound) * (bounds[1] - bounds[0]) + bounds[0];
+		});
+	});
 }
