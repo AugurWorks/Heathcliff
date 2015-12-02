@@ -2,6 +2,10 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
+if (!fs.existsSync('nets/')){
+	fs.mkdirSync('nets/');
+}
+
 var app = express();
 app.use(bodyParser.json());
 
