@@ -65,6 +65,6 @@ function asyncRun(net, config, data, id) {
 	});
 	fs.writeFileSync('nets/' + id, results.join('\n'));
 	var index = inprogress.indexOf(id);
-	inprogress.splice(1, index);
+	inprogress.splice(index, 1);
 	console.log('Done writing ' + id);
 }
