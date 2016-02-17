@@ -1,4 +1,4 @@
-# Neural Net
+# Node Net
 A small web server wrapping a neural net.
 
 ## Usage
