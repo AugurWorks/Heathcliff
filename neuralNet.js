@@ -21,7 +21,7 @@ var defaultNetConfig = {
 function runNet(netConfig, data) {
 	var id = uuid.v4();
 	var config = extend(true, {}, defaultNetConfig, netConfig);
-	var net = createNetwork(config, data[0].length - 1);
+	var net = createNetwork(config, data[0].length - 2);
 	inprogress.push(id);
 	setTimeout(function() {
 		asyncRun(net, config, data, id);
@@ -60,14 +60,14 @@ function asyncRun(net, config, data, id) {
 	var normalized = normalize(data, bounds, config);
 	for (var i = 0; i < config.iterations; i++) {
 		for (var row = 0; row < normalized.length; row++) {
-			if (normalized[row][0] !== null) {
-				net.activate(normalized[row].slice(1));
-				net.propagate(config.learningRate, [normalized[row][0]]);
+			if (normalized[row][1] !== null) {
+				net.activate(normalized[row].slice(2));
+				net.propagate(config.learningRate, [normalized[row][1]]);
 			}
 		}
 	}
 	var results = normalized.map(function(row) {
-		return row.concat(net.activate(row.slice(1)));
+		return row.concat(net.activate(row.slice(2)));
 	});
 	var denormalized = denormalize(results, bounds, config);
 	fs.writeFileSync('nets/' + id, denormalized.map(function(row) {
@@ -80,13 +80,13 @@ function asyncRun(net, config, data, id) {
 
 function calculateBounds(data) {
 	var max = Math.max.apply(null, data.map(function(row) {
-		return Math.max.apply(null, row.filter(function(col) {
-			return col !== null;
+		return Math.max.apply(null, row.filter(function(col, index) {
+			return index !== 0 && col !== null;
 		}));
 	}));
 	var min = Math.min.apply(null, data.map(function(row) {
-		return Math.min.apply(null, row.filter(function(col) {
-			return col !== null;
+		return Math.min.apply(null, row.filter(function(col, index) {
+			return index !== 0 && col !== null;
 		}));
 	}));
 	return [min, max];
@@ -94,9 +94,9 @@ function calculateBounds(data) {
 
 function normalize(data, bounds, config) {
 	return data.map(function(row) {
-		return row.map(function(val) {
-			if (val === null) {
-				return null;
+		return row.map(function(val, index) {
+			if (index === 0 || val === null) {
+				return val;
 			}
 			return (val - bounds[0]) / (bounds[1] - bounds[0]) * (config.maxBound - config.minBound) + config.minBound;
 		});
@@ -105,9 +105,9 @@ function normalize(data, bounds, config) {
 
 function denormalize(normalized, bounds, config) {
 	return normalized.map(function(row) {
-		return row.map(function(val) {
-			if (val === null) {
-				return null;
+		return row.map(function(val, index) {
+			if (index === 0 || val === null) {
+				return val;
 			}
 			return (val - config.minBound) / (config.maxBound - config.minBound) * (bounds[1] - bounds[0]) + bounds[0];
 		});
