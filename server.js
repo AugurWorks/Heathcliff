@@ -12,21 +12,32 @@ app.use(bodyParser.json());
 var neuralNet = require('./neuralNet');
 
 app.get('/nets/:id', function(req, res) {
-	var result = {};
-	if (req.params.id) {
-		result.ok = true;
-		if (neuralNet.isInprogress(req.params.id)) {
+	var result = {
+		ok: true,
+		done: true
+	};
+	try {
+		var id = req.params.id;
+		if (!id) {
+			throw "An ID is required";
+		}
+		if (neuralNet.isInprogress(id)) {
 			result.done = false;
 		} else {
-			var data = fs.readFileSync('nets/' + req.params.id, 'utf8');
-			result.done = true;
+			var path = 'nets/' + id;
+			if (!fs.existsSync(path)) {
+				throw 'Run with ID ' + id + ' does not exist';
+			}
+			var data = fs.readFileSync(path, 'utf8');
 			result.data = data.split('\n').map(function(row) {
 				return row.split(',');
 			});
 		}
-	} else {
-		result.ok = false;
-		result.error = 'Please pass a request ID';
+	} catch (e) {
+		result = {
+			ok: false,
+			error: e
+		};
 	}
 	res.send(result);
 });
