@@ -11,14 +11,14 @@ app.use(bodyParser.json());
 
 var neuralNet = require('./neuralNet');
 
-app.get('/', function(req, res) {
+app.get('/nets/:id', function(req, res) {
 	var result = {};
-	if (req.query.id) {
+	if (req.params.id) {
 		result.ok = true;
-		if (neuralNet.isInprogress(req.query.id)) {
+		if (neuralNet.isInprogress(req.params.id)) {
 			result.done = false;
 		} else {
-			var data = fs.readFileSync('nets/' + req.query.id, 'utf8');
+			var data = fs.readFileSync('nets/' + req.params.id, 'utf8');
 			result.done = true;
 			result.data = data.split('\n').map(function(row) {
 				return row.split(',');
@@ -31,7 +31,7 @@ app.get('/', function(req, res) {
 	res.send(result);
 });
 
-app.post('/', function(req, res) {
+app.post('/nets', function(req, res) {
 	var result = neuralNet.runNet(req.body.config, req.body.data);
 	res.send(JSON.stringify(result));
 });
