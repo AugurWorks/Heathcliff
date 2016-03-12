@@ -9,7 +9,8 @@ request.post('http://localhost:3000', {
 			[0, 0, 0],
 			[10, 10, 0],
 			[10, 0, 10],
-			[0, 10, 10]
+			[0, 10, 10],
+			[null, 5, 5]
 		]
 	}
 }, function(e, r, data) {
