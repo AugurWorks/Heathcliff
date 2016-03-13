@@ -60,7 +60,7 @@ function asyncRun(net, config, data, id) {
 	var normalized = normalize(data, bounds, config);
 	for (var i = 0; i < config.iterations; i++) {
 		for (var row = 0; row < normalized.length; row++) {
-			if (normalized[row][1] !== null) {
+			if (normalized[row][1] !== "NULL") {
 				net.activate(normalized[row].slice(2));
 				net.propagate(config.learningRate, [normalized[row][1]]);
 			}
@@ -81,12 +81,12 @@ function asyncRun(net, config, data, id) {
 function calculateBounds(data) {
 	var max = Math.max.apply(null, data.map(function(row) {
 		return Math.max.apply(null, row.filter(function(col, index) {
-			return index !== 0 && col !== null;
+			return index !== 0 && col !== "NULL";
 		}));
 	}));
 	var min = Math.min.apply(null, data.map(function(row) {
 		return Math.min.apply(null, row.filter(function(col, index) {
-			return index !== 0 && col !== null;
+			return index !== 0 && col !== "NULL";
 		}));
 	}));
 	return [min, max];
@@ -95,7 +95,7 @@ function calculateBounds(data) {
 function normalize(data, bounds, config) {
 	return data.map(function(row) {
 		return row.map(function(val, index) {
-			if (index === 0 || val === null) {
+			if (index === 0 || val === "NULL") {
 				return val;
 			}
 			return (val - bounds[0]) / (bounds[1] - bounds[0]) * (config.maxBound - config.minBound) + config.minBound;
@@ -106,7 +106,7 @@ function normalize(data, bounds, config) {
 function denormalize(normalized, bounds, config) {
 	return normalized.map(function(row) {
 		return row.map(function(val, index) {
-			if (index === 0 || val === null) {
+			if (index === 0 || val === "NULL") {
 				return val;
 			}
 			return (val - config.minBound) / (config.maxBound - config.minBound) * (bounds[1] - bounds[0]) + bounds[0];
