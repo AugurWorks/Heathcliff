@@ -6,9 +6,8 @@ module.exports = {
 };
 
 var defaultNetConfig = {
-	depth: 4,
-	iterations: 20000,
-	learningRate: 0.3,
+	iterations: 1000000,
+	learningRate: 0.05,
 	maxBound: 0.9,
 	minBound: 0.1
 };
@@ -19,8 +18,14 @@ function syncRunNet(netConfig, rawData) {
       return isNaN(item) ? item : parseFloat(item);
     });
   });
+  var dataSize = data[0].length - 2;
+  var depth = Math.floor(Math.log2(dataSize));
   var config = extend(true, {}, defaultNetConfig, netConfig);
-  var net = createNetwork(config, data[0].length - 2);
+  var args = Array.apply(null, Array(depth + 1)).map(function(val, i) {
+    return Math.ceil(dataSize / Math.pow(2, i));
+  });
+  args.push(1);
+  var net = new (Function.prototype.bind.apply(synaptic.Architect.Perceptron, args))();
   var bounds = calculateBounds(data);
 	var normalized = normalize(data, bounds, config);
 	for (var i = 0; i < config.iterations; i++) {
@@ -35,25 +40,6 @@ function syncRunNet(netConfig, rawData) {
 		return row.concat(net.activate(row.slice(2)));
 	});
   return denormalize(results, bounds, config);
-}
-
-function createNetwork(config, dataSize) {
-	var inputLayer = new synaptic.Layer(dataSize);
-	var outputLayer = new synaptic.Layer(1);
-	var lastLayer = inputLayer;
-	var hiddenLayers = [];
-	for (var l = 0; l < config.depth; l++) {
-		var hiddenLayer = new synaptic.Layer(dataSize);
-		lastLayer.project(hiddenLayer);
-		hiddenLayers.push(hiddenLayer);
-		lastLayer = hiddenLayer;
-	}
-	lastLayer.project(outputLayer);
-	return new synaptic.Network({
-		input: inputLayer,
-		hidden: hiddenLayers,
-		output: outputLayer
-	});
 }
 
 function calculateBounds(data) {
