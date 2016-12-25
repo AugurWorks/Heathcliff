@@ -1,4 +1,5 @@
 var amqp = require('amqplib/callback_api');
+var neuralNet = require('./neuralNet');
 
 var config = {
   user: process.env.RABBITMQ_USERNAME || 'guest',
@@ -21,9 +22,12 @@ amqp.connect(amqpConnection, function(err, conn) {
 
     ch.consume(trainingTopic, function(msg) {
       var content = JSON.parse(msg.content.toString());
-      console.log(content);
+      var results = neuralNet.syncRunNet(content.trainingConfig, content.data);
+      content.data = results;
+      ch.sendToQueue(resultTopic, new Buffer(JSON.stringify(content)));
+      ch.ack(msg);
     }, {
-      noAck: true
+      noAck: false
     });
   });
 });
