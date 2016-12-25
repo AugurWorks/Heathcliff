@@ -1,6 +1,9 @@
 var synaptic = require('synaptic');
 var extend = require('extend');
 
+var log4js = require('log4js');
+var logger = log4js.getLogger('lib/neuralNet');
+
 module.exports = {
   syncRunNet: syncRunNet
 };
@@ -12,7 +15,7 @@ var defaultNetConfig = {
 	minBound: 0.1
 };
 
-function syncRunNet(netConfig, rawData) {
+function syncRunNet(id, netConfig, rawData) {
   var data = rawData.map(function(row) {
     return row.map(function(item) {
       return isNaN(item) ? item : parseFloat(item);
@@ -29,6 +32,9 @@ function syncRunNet(netConfig, rawData) {
   var bounds = calculateBounds(data);
 	var normalized = normalize(data, bounds, config);
 	for (var i = 0; i < config.iterations; i++) {
+    if (i % Math.floor(config.iterations / 10) === 0) {
+      logger.debug('Finished training net ' + id + ' for ' + i + ' rounds');
+    }
 		for (var row = 0; row < normalized.length; row++) {
 			if (normalized[row][1].toString().toUpperCase() !== "NULL") {
 				net.activate(normalized[row].slice(2));
