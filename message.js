@@ -1,5 +1,5 @@
 var amqp = require('amqplib/callback_api');
-var neuralNet = require('./neuralNet');
+var predict = require('./lib/predict');
 
 var log4js = require('log4js');
 var logger = log4js.getLogger('message');
@@ -35,7 +35,7 @@ amqp.connect(amqpConnection, function(err, conn) {
     ch.consume(trainingTopic, function(msg) {
       var content = JSON.parse(msg.content.toString());
       logger.info('Processing net ' + content.netId);
-      var results = neuralNet.syncRunNet(content.netId, content.trainingConfig, content.data);
+      var results = predict(content.netId, content.trainingConfig, content.data);
       content.data = results;
       ch.sendToQueue(resultTopic, new Buffer(JSON.stringify(content)));
       ch.ack(msg);
