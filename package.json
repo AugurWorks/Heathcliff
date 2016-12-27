@@ -6,6 +6,7 @@
   "license": "Proprietary",
   "dependencies": {
     "amqplib": "^0.5.1",
+    "aws-sdk": "^2.7.19",
     "extend": "^3.0.0",
     "fluent-logger": "^2.2.0",
     "log4js": "^1.1.0",
