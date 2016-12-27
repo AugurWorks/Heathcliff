@@ -5,7 +5,7 @@ var log4js = require('log4js');
 var logger = log4js.getLogger('message');
 
 if (process.env.FLUENTD_HOST) {
-  log4js.addAppender(require('fluent-logger').support.log4jsAppender('node-net', {
+  log4js.addAppender(require('fluent-logger').support.log4jsAppender('heathcliff', {
     host: process.env.FLUENTD_HOST,
     timeout: 3.0
   }));

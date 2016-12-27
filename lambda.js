@@ -10,7 +10,7 @@ exports.predict = function(event, context, callback) {
   var fluentHost = message.metadata.fluentHost;
 
   if (fluentHost) {
-    log4js.addAppender(require('fluent-logger').support.log4jsAppender('node-net-lambda', {
+    log4js.addAppender(require('fluent-logger').support.log4jsAppender('heathcliff-lambda', {
       host: process.env.FLUENTD_HOST,
       timeout: 3.0
     }));

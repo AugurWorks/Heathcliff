@@ -1,7 +1,7 @@
 {
-  "name": "node-net",
+  "name": "Heathcliff",
   "version": "1.0.0",
-  "description": "Node.js neural net web server",
+  "description": "Node.js Neural Net",
   "author": "TheConnMan",
   "license": "Proprietary",
   "dependencies": {
