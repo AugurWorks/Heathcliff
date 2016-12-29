@@ -18,8 +18,7 @@ exports.predict = function(event, context, callback) {
 
   logger.info('Starting training');
 
-  var results = predict(message.netId, message.trainingConfig, message.data);
-  message.data = results;
+  predict(message);
 
   logger.info('Finished training');
 
