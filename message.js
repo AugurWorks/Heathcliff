@@ -32,6 +32,8 @@ amqp.connect(amqpConnection, function(err, conn) {
     ch.assertQueue(trainingTopic, {durable: true});
     ch.assertQueue(resultTopic, {durable: true});
 
+    ch.prefetch(1);
+
     ch.consume(trainingTopic, function(msg) {
       var content = JSON.parse(msg.content.toString());
       logger.info('Processing net ' + content.netId);
@@ -39,8 +41,6 @@ amqp.connect(amqpConnection, function(err, conn) {
       ch.sendToQueue(resultTopic, new Buffer(JSON.stringify(content)));
       ch.ack(msg);
       logger.info('Finished processing net ' + content.netId);
-    }, {
-      noAck: false
     });
   });
 });
