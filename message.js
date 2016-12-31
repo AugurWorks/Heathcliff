@@ -21,23 +21,29 @@ var config = {
 var env = process.env.ENV || 'local';
 var trainingTopic = 'nets.training' + (env ? '.' + env : '');
 var resultTopic = 'nets.results' + (env ? '.' + env : '');
+var heartbeatTopic = 'heartbeat' + (env ? '.' + env : '');
 
 var amqpConnection = `amqp://${ config.user }:${ config.pass }@${ config.host }:${ config.port }`;
 
 logger.info('Starting Node Net');
 
-amqp.connect(amqpConnection, function(err, conn) {
+amqp.connect(amqpConnection, {heartbeat: 60}, function(err, conn) {
   conn.createChannel(function(err, ch) {
     logger.info('Connected to RabbitMQ');
     ch.assertQueue(trainingTopic, {durable: true});
     ch.assertQueue(resultTopic, {durable: true});
+    ch.assertQueue(heartbeatTopic, {durable: false});
 
     ch.prefetch(1);
 
     ch.consume(trainingTopic, function(msg) {
       var content = JSON.parse(msg.content.toString());
       logger.info('Processing net ' + content.netId);
-      predict(content);
+      predict(content, () => {
+        ch.sendToQueue(heartbeatTopic, new Buffer(JSON.stringify({
+          heartbeat: Date.now()
+        })));
+      });
       ch.sendToQueue(resultTopic, new Buffer(JSON.stringify(content)));
       ch.ack(msg);
       logger.info('Finished processing net ' + content.netId);
