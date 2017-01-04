@@ -29,8 +29,11 @@ exports.predict = function(event, context, callback) {
   sqs.sendMessage(params, function(err, data) {
     if (err) {
       logger.error(err);
+      callback(err);
+
     } else {
       logger.info('Successfully sent SQS message');
+      callback(null, 'Finished training net ' + message.netId);
     }
   });
 };
