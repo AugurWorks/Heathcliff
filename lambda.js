@@ -11,7 +11,7 @@ exports.predict = function(event, context, callback) {
 
   if (fluentHost) {
     log4js.addAppender(require('fluent-logger').support.log4jsAppender('heathcliff-lambda', {
-      host: process.env.FLUENTD_HOST,
+      host: fluentHost,
       timeout: 3.0
     }));
   }
