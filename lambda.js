@@ -7,14 +7,6 @@ var sqs = new AWS.SQS();
 
 exports.predict = function(event, context, callback) {
   var message = JSON.parse(event.Records[0].Sns.Message);
-  var fluentHost = message.metadata.fluentHost;
-
-  if (fluentHost) {
-    log4js.addAppender(require('fluent-logger').support.log4jsAppender('heathcliff-lambda', {
-      host: fluentHost,
-      timeout: 3.0
-    }));
-  }
 
   logger.info('Starting training');
 
