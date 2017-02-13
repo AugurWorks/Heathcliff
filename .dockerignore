@@ -1,0 +1,4 @@
+node_modules/
+.git/
+*.sh
+README.md
