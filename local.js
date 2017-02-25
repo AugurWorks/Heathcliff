@@ -3,14 +3,9 @@ var logger = log4js.getLogger('local');
 var predict = require('./lib/predict');
 var message = require('./test/payload.json');
 
-var fluentHost = message.metadata.fluentHost;
+var FluentD = require('./lib/fluentd');
 
-if (fluentHost) {
-  log4js.addAppender(require('fluent-logger').support.log4jsAppender('heathcliff-lambda', {
-    host: fluentHost,
-    timeout: 3.0
-  }));
-}
+var fluent = new FluentD(message.metadata.fluentHost, message.metadata.loggingEnv, 'local');
 
 logger.info('Starting training');
 
@@ -18,4 +13,6 @@ predict(message);
 
 logger.info('Finished training');
 
-console.log(JSON.stringify(message, null, 2));
+fluent.close(() => {
+  console.log('Done flushing logs');
+});
