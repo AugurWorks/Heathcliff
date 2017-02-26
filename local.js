@@ -5,7 +5,7 @@ var message = require('./test/payload.json');
 
 var FluentD = require('./lib/fluentd');
 
-var fluent = new FluentD(message.metadata.fluentHost, message.metadata.loggingEnv, 'local');
+var fluent = new FluentD(message.netId, message.metadata, 'local');
 
 logger.info('Starting training');
 

@@ -10,7 +10,7 @@ var sqs = new AWS.SQS();
 exports.predict = function(event, context, callback) {
   var message = JSON.parse(event.Records[0].Sns.Message);
 
-  var fluent = new FluentD(message.metadata.fluentHost, message.metadata.loggingEnv, 'lambda');
+  var fluent = new FluentD(message.netId, message.metadata, 'lambda');
 
   logger.info('Starting training');
 
