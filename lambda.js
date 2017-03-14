@@ -2,11 +2,15 @@ var log4js = require('log4js');
 var logger = log4js.getLogger('lambda');
 var predict = require('./lib/predict');
 
+var FluentD = require('./lib/fluentd');
+
 var AWS = require('aws-sdk');
 var sqs = new AWS.SQS();
 
 exports.predict = function(event, context, callback) {
   var message = JSON.parse(event.Records[0].Sns.Message);
+
+  var fluent = new FluentD(message.netId, message.metadata, 'lambda');
 
   logger.info('Starting training');
 
@@ -21,11 +25,11 @@ exports.predict = function(event, context, callback) {
   sqs.sendMessage(params, function(err, data) {
     if (err) {
       logger.error(err);
-      callback(err);
+      fluent.close(() => callback(err));
 
     } else {
       logger.info('Successfully sent SQS message');
-      callback(null, 'Finished training net ' + message.netId);
+      fluent.close(() => callback(null, 'Finished training net ' + message.netId));
     }
   });
 };
