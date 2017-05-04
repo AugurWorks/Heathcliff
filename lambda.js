@@ -31,5 +31,10 @@ exports.predict = function(event, context, callback) {
       logger.info('Successfully sent SQS message');
       fluent.close(() => callback(null, 'Finished training net ' + message.netId));
     }
+
+    setTimeout(() => {
+      logger.warn('Logs are taking too long, exiting successfully');
+      process.exit(0);
+    }, 5000);
   });
 };
