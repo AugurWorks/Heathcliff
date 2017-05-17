@@ -34,7 +34,7 @@ exports.predict = function(event, context, callback) {
 
     setTimeout(() => {
       logger.warn('Logs are taking too long, exiting successfully');
-      process.exit(0);
+      callback(null, 'Finished training net ' + message.netId);
     }, 5000);
   });
 };
