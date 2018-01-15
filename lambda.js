@@ -22,6 +22,8 @@ exports.predict = function(event, context, callback) {
     MessageBody: JSON.stringify(message),
     QueueUrl: 'https://sqs.us-east-1.amazonaws.com/274685854631/' + message.metadata.sqsName
   };
+
+  logger.debug('Sending SQS message to' + params.QueueUrl);
   sqs.sendMessage(params, function(err, data) {
     if (err) {
       logger.error(err);
@@ -37,4 +39,6 @@ exports.predict = function(event, context, callback) {
       callback(null, 'Finished training net ' + message.netId);
     }, 5000);
   });
+
+  logger.debug('Done calling SQS sendMessage method');
 };
