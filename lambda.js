@@ -24,20 +24,17 @@ exports.predict = function(event, context, callback) {
   };
 
   logger.debug('Sending SQS message to' + params.QueueUrl);
-  sqs.sendMessage(params, function(err, data) {
-    if (err) {
-      logger.error(err);
-      fluent.close(() => callback(err));
-
-    } else {
-      logger.info('Successfully sent SQS message');
-      fluent.close(() => callback(null, 'Finished training net ' + message.netId));
-    }
-
-    setTimeout(() => {
-      logger.warn('Logs are taking too long, exiting successfully');
-      callback(null, 'Finished training net ' + message.netId);
-    }, 5000);
+  sqs.sendMessage(params).promise().then(() => {
+    logger.info('Successfully sent SQS message');
+    fluent.close(() => callback(null, 'Finished training net ' + message.netId));
+  }).catch((err) => {
+    logger.error(err);
+    fluent.close(() => callback(err));
+    }).then(() => {
+      setTimeout(() => {
+        logger.warn('Logs are taking too long, exiting successfully');
+        callback(null, 'Finished training net ' + message.netId);
+      }, 5000);
   });
 
   logger.debug('Done calling SQS sendMessage method');
