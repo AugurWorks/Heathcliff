@@ -830,6 +830,10 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
 
+statsd-client@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/statsd-client/-/statsd-client-0.4.2.tgz#c0dc4d583609f97d638742f3ee412c34e9aea482"
+
 streamroller@^0.4.0:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/streamroller/-/streamroller-0.4.1.tgz#d435bd5974373abd9bd9068359513085106cc05f"
