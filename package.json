@@ -1,8 +1,11 @@
 {
   "name": "Heathcliff",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Node.js Neural Net",
   "author": "TheConnMan",
+  "scripts": {
+    "test": "eslint **/*.js"
+  },
   "license": "Proprietary",
   "dependencies": {
     "amqplib": "^0.5.1",
@@ -10,6 +13,10 @@
     "extend": "^3.0.0",
     "fluent-logger": "github:theconnman/fluent-logger-node",
     "log4js": "^1.1.0",
+    "statsd-client": "^0.4.2",
     "synaptic": "^1.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.11.0"
   }
 }
