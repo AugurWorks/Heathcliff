@@ -1,8 +1,7 @@
-var log4js = require('log4js');
-var logger = log4js.getLogger('lambda');
+var logger = require('winston');
 var predict = require('./lib/predict');
 
-var FluentD = require('./lib/fluentd');
+var Logging = require('./lib/logging');
 
 var AWS = require('aws-sdk');
 var sqs = new AWS.SQS();
@@ -10,7 +9,7 @@ var sqs = new AWS.SQS();
 exports.predict = function(event, context, callback) {
   var message = JSON.parse(event.Records[0].Sns.Message);
 
-  var fluent = new FluentD(message.netId, message.metadata, 'lambda');
+  var logging = new Logging(message.netId, message.metadata, 'lambda');
 
   logger.info('Starting training');
 
@@ -26,15 +25,10 @@ exports.predict = function(event, context, callback) {
   logger.debug('Sending SQS message to' + params.QueueUrl);
   sqs.sendMessage(params).promise().then(() => {
     logger.info('Successfully sent SQS message');
-    fluent.close(() => callback(null, 'Finished training net ' + message.netId));
+    callback(null, 'Finished training net ' + message.netId)
   }).catch((err) => {
     logger.error(err);
-    fluent.close(() => callback(err));
-    }).then(() => {
-      setTimeout(() => {
-        logger.warn('Logs are taking too long, exiting successfully');
-        callback(null, 'Finished training net ' + message.netId);
-      }, 5000);
+    callback(err);
   });
 
   logger.debug('Done calling SQS sendMessage method');

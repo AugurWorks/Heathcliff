@@ -1,18 +1,13 @@
-var log4js = require('log4js');
-var logger = log4js.getLogger('local');
+var logger = require('winston');
 var predict = require('./lib/predict');
 var message = require('./test/payload.json');
 
-var FluentD = require('./lib/fluentd');
+var Logging = require('./lib/logging');
 
-var fluent = new FluentD(message.netId, message.metadata, 'local');
+var logging = new Logging(message.netId, message.metadata, 'local');
 
 logger.info('Starting training');
 
 predict(message);
 
 logger.info('Finished training');
-
-fluent.close(() => {
-  console.log('Done flushing logs');
-});

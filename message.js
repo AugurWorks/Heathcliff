@@ -1,15 +1,9 @@
 var amqp = require('amqplib/callback_api');
 var predict = require('./lib/predict');
 
-var log4js = require('log4js');
-var logger = log4js.getLogger('message');
+var logger = require('winston');
 
-if (process.env.FLUENTD_HOST) {
-  log4js.addAppender(require('fluent-logger').support.log4jsAppender('heathcliff', {
-    host: process.env.FLUENTD_HOST,
-    timeout: 3.0
-  }));
-}
+var Logging = require('./lib/logging');
 
 var config = {
   user: process.env.RABBITMQ_USERNAME || 'guest',
