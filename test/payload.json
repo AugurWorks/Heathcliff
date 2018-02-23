@@ -1,5 +1,6 @@
 {
   "netId": "00000000-0000-0000-0000-000000000000",
+  "algorithmRequestId": 1234,
   "metadata": {
     "fluentHost": "localhost",
     "loggingEnv": "LOCAL",
