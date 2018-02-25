@@ -9,7 +9,7 @@ var sqs = new AWS.SQS();
 exports.predict = function(event, context, callback) {
   var message = JSON.parse(event.Records[0].Sns.Message);
 
-  var logging = new Logging(message.netId, message.metadata, 'lambda');
+  Logging.init();
 
   logger.info('Starting training');
 

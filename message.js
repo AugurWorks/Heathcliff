@@ -5,6 +5,8 @@ var logger = require('winston');
 
 var Logging = require('./lib/logging');
 
+Logging.init();
+
 var config = {
   user: process.env.RABBITMQ_USERNAME || 'guest',
   pass: process.env.RABBITMQ_PASSWORD || 'guest',

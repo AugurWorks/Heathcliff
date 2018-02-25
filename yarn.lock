@@ -1222,6 +1222,10 @@ which@^1.2.9:
   dependencies:
     isexe "^2.0.0"
 
+winston-context@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/winston-context/-/winston-context-0.0.7.tgz#2dfa861324c4fd61b71d2b271215f5978b301391"
+
 winston@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/winston/-/winston-2.4.0.tgz#808050b93d52661ed9fb6c26b3f0c826708b0aee"

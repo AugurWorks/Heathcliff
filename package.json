@@ -1,6 +1,6 @@
 {
   "name": "Heathcliff",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Node.js Neural Net",
   "author": "TheConnMan",
   "scripts": {
@@ -14,7 +14,8 @@
     "logdna-winston": "^1.0.0",
     "statsd-client": "^0.4.2",
     "synaptic": "^1.0.2",
-    "winston": "^2.4.0"
+    "winston": "^2.4.0",
+    "winston-context": "^0.0.7"
   },
   "devDependencies": {
     "eslint": "^4.11.0"

@@ -4,7 +4,7 @@ var message = require('./test/payload.json');
 
 var Logging = require('./lib/logging');
 
-var logging = new Logging(message.netId, message.metadata, 'local');
+Logging.init();
 
 logger.info('Starting training');
 
