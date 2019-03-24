@@ -1,6 +1,6 @@
 {
   "name": "Heathcliff",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Node.js Neural Net",
   "author": "TheConnMan",
   "scripts": {
